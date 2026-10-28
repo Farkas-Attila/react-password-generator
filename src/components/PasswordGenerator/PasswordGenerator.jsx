@@ -1,10 +1,20 @@
 import { useState } from "react";
 import "./PasswordGenerator.css";
 
-export default function PasswordGenerator() {
+const MIN_LENGTH = 8;
+const MAX_LENGTH = 20;
+const DEFAULT_LENGTH = 12;
+
+export default function PasswordGenerator({length = DEFAULT_LENGTH}) {
   const [password, setPassword] = useState("");
   const [showAlert, setShowAlert] = useState(false);
-  const [passwordLength, setPasswordLength] = useState(12);
+
+  const [passwordLength, setPasswordLength] = useState(
+    length >= MIN_LENGTH &&
+    length <= MAX_LENGTH
+      ? length
+      : DEFAULT_LENGTH
+  );
   
   function createPassword() {
     const chars =
@@ -46,18 +56,20 @@ export default function PasswordGenerator() {
       </div>
 
       <div className="length-container">
-        <label htmlFor="length">Password Length (min=8, max=20):</label>
+        <label htmlFor="length">
+          Password Length (min={MIN_LENGTH}, max={MAX_LENGTH}):
+        </label>
         <input
           id="length"
           type="number"
-          min="8"
-          max="20"
+          min={MIN_LENGTH}
+          max={MAX_LENGTH}
           value={passwordLength}
           onChange={(e) => {
             let value = Number(e.target.value);
             // input validation
-            if (value < 8) value = 8;
-            if (value > 20) value = 20;
+            if (value < MIN_LENGTH) value = MIN_LENGTH;
+            if (value > MAX_LENGTH) value = MAX_LENGTH;
             setPasswordLength(value);
           }}
         />
